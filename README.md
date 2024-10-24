@@ -30,7 +30,9 @@
 
 - ERD
 
-  - ![ERD_IMG]() 각자 ERD 짜서 이미지 넣기
+  - ![ERD_IMG](/assets/img/SSAFY_SANDBOX_ERD.png) 
+  - Oauth를 고려한 테이블 설계
+  - ![CHECK IMG](/assets/img/check.png)
 
 - CRUD
 
