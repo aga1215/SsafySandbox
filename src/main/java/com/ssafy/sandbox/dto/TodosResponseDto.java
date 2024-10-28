@@ -9,9 +9,14 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
-public class TodosResponse {
-
+public class TodosResponseDto {
     private List<TodoDTO> todos;
+
+    public TodosResponseDto(List<Todo> todos) {
+        this.todos = todos.stream()
+                .map(TodoDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
 
     @Getter
     @Setter
@@ -27,11 +32,5 @@ public class TodosResponse {
             dto.setCompleted(todo.isCompleted());
             return dto;
         }
-    }
-
-    public TodosResponse(List<Todo> todoList) {
-        this.todos = todoList.stream()
-                .map(TodoDTO::fromEntity)
-                .collect(Collectors.toList());
     }
 }
