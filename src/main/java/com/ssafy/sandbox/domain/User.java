@@ -1,13 +1,21 @@
-package com.ssafy.sandbox.domain.Users;
+package com.ssafy.sandbox.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Entity
+import java.util.List;
+
 @Getter
+@Setter
 @NoArgsConstructor
-public class Users {
+@Entity
+@Table(name = "users", uniqueConstraints = {
+        @UniqueConstraint(name = "UK_users_email", columnNames = "email"),
+        @UniqueConstraint(name = "UK_users_oauth", columnNames = {"oauth_provider", "oauth_id"})
+})
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,7 +24,7 @@ public class Users {
     @Column(nullable = false, length = 50)
     private String name;
 
-    @Column(unique = true, nullable = true, length = 100)
+    @Column(nullable = true, unique = true, length = 100)
     private String email;
 
     @Column(nullable = true, length = 100)
@@ -30,4 +38,7 @@ public class Users {
 
     @Column(name = "oauth_id", nullable = true, length = 100)
     private String oauthId;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Todo> todos;
 }
