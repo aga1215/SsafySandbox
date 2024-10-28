@@ -1,3 +1,4 @@
+/*
 package com.ssafy.sandbox.domain;
 
 import jakarta.persistence.*;
@@ -22,5 +23,5 @@ public class TodoComment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "todo_id", nullable = false)
     private Todo todo;
-
 }
+*/

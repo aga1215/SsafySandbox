@@ -1,3 +1,4 @@
+/*
 package com.ssafy.sandbox.domain;
 
 import jakarta.persistence.*;
@@ -42,3 +43,4 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Todo> todos;
 }
+*/

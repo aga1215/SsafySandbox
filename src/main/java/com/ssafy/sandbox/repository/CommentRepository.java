@@ -1,3 +1,4 @@
+/*
 package com.ssafy.sandbox.repository;
 
 import com.ssafy.sandbox.domain.TodoComment;
@@ -8,3 +9,4 @@ import org.springframework.stereotype.Repository;
 public interface CommentRepository extends JpaRepository<TodoComment, Integer> {
     // 추가적인 쿼리가 필요하면 메서드 정의 가능
 }
+*/
