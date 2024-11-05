@@ -1,7 +1,10 @@
 package com.ssafy.sandbox.service;
 
+import com.ssafy.sandbox.config.exception.dtoException.DomainNotFoundException;
 import com.ssafy.sandbox.domain.Todo;
+import com.ssafy.sandbox.dto.CreateTodoRequest;
 import com.ssafy.sandbox.repository.TodoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,45 +12,38 @@ import java.util.Optional;
 
 @Service
 public class TodoServiceImpl implements TodoService {
+    final TodoRepository todoRepository;
+    final String DOMAIN_NAME = "TODO";
 
-    private final TodoRepository repository;
-
-    public TodoServiceImpl(TodoRepository repository) {
-        this.repository = repository;
+    public TodoServiceImpl(TodoRepository todoRepository) {
+        this.todoRepository = todoRepository;
     }
 
     @Override
-    public List<Todo> findAll() {
-        return repository.findAll();
+    public List<Todo> getTodos() {
+        return todoRepository.findAll();
     }
 
     @Override
-    public Optional<Todo> findById(int id) {
-        return repository.findById(id);
+    public Long createTodo(CreateTodoRequest createTodoRequest) {
+        return todoRepository
+                .save(Todo.of(createTodoRequest.getContent()))
+                .getId();
+    }
+
+    @Transactional
+    @Override
+    public void toggleStatus(Long todoId) {
+        todoRepository
+                .findById(todoId)
+                .orElseThrow(() -> new DomainNotFoundException(DOMAIN_NAME, todoId))
+                .toggleCompleted();
     }
 
     @Override
-    public Todo save(Todo todo) {
-        return repository.save(todo);
-    }
-
-    @Override
-    public boolean deleteById(int id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public Todo updateTodo(int id) {
-        if (repository.existsById(id)) {
-            Todo todo = repository.findById(id).get();
-            todo.setCompleted(!todo.isCompleted());
-            repository.save(todo);
-            return todo;
-        }
-        return null;
+    public void deleteTodo(Long todoId) throws Exception {
+        todoRepository.delete(todoRepository
+                .findById(todoId)
+                .orElseThrow(() -> new DomainNotFoundException(DOMAIN_NAME, todoId)));
     }
 }

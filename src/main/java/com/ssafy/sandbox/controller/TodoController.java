@@ -3,38 +3,46 @@ package com.ssafy.sandbox.controller;
 import com.ssafy.sandbox.dto.*;
 import com.ssafy.sandbox.domain.Todo;
 import com.ssafy.sandbox.service.TodoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
+@RequestMapping("/todos")
 public class TodoController {
+    @Autowired
+    private final TodoService todoService;
 
-    private final TodoService service;
-
-    public TodoController(TodoService service) {
-        this.service = service;
+    public TodoController(TodoService todoService) {
+        this.todoService = todoService;
     }
 
-    @GetMapping("/todos")
-    public TodosResponseDto selectAll() {
-        return new TodosResponseDto(service.findAll());
+    @GetMapping
+    public ResponseEntity<GetTodoResponse> getTodos() {
+        List<Todo> todos = todoService.getTodos();
+        return ResponseEntity.ok(new GetTodoResponse(todos));
     }
 
-    @PostMapping("/todos")
-    public TodoResponseDto save(@RequestBody Todo todo) {
-        Todo savedTodo = service.save(todo);
-        return new TodoResponseDto(savedTodo.getId(), savedTodo.getContent(), savedTodo.isCompleted());
+
+    @PostMapping
+    public ResponseEntity<Void> createTodo(@RequestBody CreateTodoRequest createTodoRequest) {
+        todoService.createTodo(createTodoRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @DeleteMapping("/todos/{todoId}")
-    public DeleteResponseDto delete(@PathVariable int todoId) {
-        int resultId = service.deleteById(todoId) ? todoId : -1;
-        return new DeleteResponseDto(resultId);
+    @PatchMapping("/{todoId}")
+    public ResponseEntity<Void> toggleStatus(@PathVariable Long todoId) throws Exception {
+        todoService.toggleStatus(todoId);
+        return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/todos/{todoId}")
-    public UpdateResponseDto fetch(@PathVariable int todoId) {
-        Todo updatedTodo = service.updateTodo(todoId);
-        int resultId = updatedTodo != null ? todoId : -1;
-        return new UpdateResponseDto(resultId);
+    @DeleteMapping("/{todoId}")
+    public ResponseEntity<Void> deleteTodo(@PathVariable Long todoId) throws Exception {
+        todoService.deleteTodo(todoId);
+        return ResponseEntity.noContent().build();
     }
+
 }
