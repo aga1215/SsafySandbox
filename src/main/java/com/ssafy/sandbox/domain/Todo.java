@@ -32,9 +32,6 @@ public class Todo {
         return new Todo(content);
     }
 
-    public Long getId() {
-        return id;
-    }
 
 
       /*  @ManyToOne(fetch = FetchType.LAZY)
